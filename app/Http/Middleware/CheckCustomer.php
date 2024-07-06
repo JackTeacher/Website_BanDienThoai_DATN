@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Support\Facades\Auth;
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Cookie\Middleware\EncryptCookies as Middleware;
+
+class CheckCustomer 
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        if (Auth::guest()) {
+            return $next($request);
+        } else {
+            if (Auth::user()->loai_tai_khoan_id < 5) {
+                return redirect()->intended('/admin');
+            }
+            return $next($request);
+        }
+    }
+}
